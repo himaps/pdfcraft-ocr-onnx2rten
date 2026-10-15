@@ -1,4 +1,3 @@
-
 name: ONNX to RTEN Converter
 on:
   workflow_dispatch:
@@ -7,24 +6,23 @@ jobs:
   convert:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source "$HOME/.cargo/env"
 
       - name: Install rten-cli
         run: cargo install rten-cli
 
       - name: Convert detection model
-        run: rten-cli convert ch_PP-OCRv4_det_infer.onnx ch_det.rten
+        run: rten convert ch_PP-OCRv4_det_infer.onnx ch_det.rten
       - name: Convert recognition model
-        run: rten-cli convert ch_PP-OCRv4_rec_infer.onnx ch_rec.rten
+        run: rten convert ch_PP-OCRv4_rec_infer.onnx ch_rec.rten
 
-      - name: Upload converted rten models
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: rten-models
