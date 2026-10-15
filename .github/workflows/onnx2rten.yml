@@ -9,18 +9,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Rust
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          source "$HOME/.cargo/env"
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-      - name: Install rten-cli
-        run: cargo install rten-cli
+      - name: Install rten-convert
+        run: pip install rten-convert
 
       - name: Convert detection model
-        run: rten convert ch_PP-OCRv4_det_infer.onnx ch_det.rten
+        run: rten-convert ch_PP-OCRv4_det_infer.onnx ch_det.rten
       - name: Convert recognition model
-        run: rten convert ch_PP-OCRv4_rec_infer.onnx ch_rec.rten
+        run: rten-convert ch_PP-OCRv4_rec_infer.onnx ch_rec.rten
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
